@@ -202,9 +202,35 @@ def update_contact(request):
 
     return Response({"success": True, "message": "Contact updated successfully"}, status=200)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_authenticated_user(request):
+    user = request.user
+    base_url = "https://drivemate-1.onrender.com"
+    
+    # Process profile picture URL
+    if user.profile_picture:
+        # Normalize path (replace backslashes with forward slashes)
+        normalized_path = user.profile_picture.replace('\\', '/')
+        # Join with base URL (avoiding double slashes)
+        profile_picture_url = f"{base_url.rstrip('/')}/{normalized_path.lstrip('/')}"
+    else:
+        profile_picture_url = None
 
+    return Response({
+        "success": True,
+        "user": {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "name": f"{user.first_name} {user.last_name or ''}",
+            "email": user.email,
+            "contact": user.contact,
+            "profile_picture": profile_picture_url,
+            "role": user.role
+        }
+    }, status=200)
 
-
+"""
 
 
 @api_view(['GET'])
@@ -225,7 +251,7 @@ def get_authenticated_user(request):
 }, status=200)
 
 
-""""
+
 
  return Response({
         "success": True,
