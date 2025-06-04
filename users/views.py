@@ -206,16 +206,6 @@ def update_contact(request):
 @permission_classes([IsAuthenticated])
 def get_authenticated_user(request):
     user = request.user
-    base_url = "https://drivemate-1.onrender.com"
-    
-    # Process profile picture URL
-    if user.profile_picture:
-        # Normalize path (replace backslashes with forward slashes)
-        normalized_path = user.profile_picture.replace('\\', '/')
-        # Join with base URL (avoiding double slashes)
-        profile_picture_url = f"{base_url.rstrip('/')}/{normalized_path.lstrip('/')}"
-    else:
-        profile_picture_url = None
 
     return Response({
         "success": True,
@@ -225,7 +215,7 @@ def get_authenticated_user(request):
             "name": f"{user.first_name} {user.last_name or ''}",
             "email": user.email,
             "contact": user.contact,
-            "profile_picture": profile_picture_url,
+            "profile_picture":user.profile_picture,
             "role": user.role
         }
     }, status=200)
@@ -265,4 +255,20 @@ def get_authenticated_user(request):
             "role": user.role
         }
     }, status=200)
+
+
+
+
+
+git add users/views.py
+git commit -m "Update users/views.py"
+git push origin main  
+
+
+
+
+
+
+
+
 """
