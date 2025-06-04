@@ -263,42 +263,40 @@ def stats(request):
 @permission_classes([AllowAny])
 def active_rentals(request):
     try:
-        # Get the current logged-in user
         user = request.user
-
-        # Get all active rentals for the logged-in user (status: 'ongoing', 'completed' and time in the future)
-        #active_rentals = Rental.objects.filter(user=user, status='active', rental_end__gte=timezone.now()).select_related('car')
+        base_url = "https://drivemate-1.onrender.com"  # Explicit base URL
 
         active_rentals = Rental.objects.filter(
-        user=user,
-        status='active',
-        rental_end__gte=timezone.now()
-        ).select_related('car').order_by('rental_start')  # Soonest upcoming
+            user=user,
+            status='active',
+            rental_end__gte=timezone.now()
+        ).select_related('car').order_by('rental_start')
 
+        rentals_data = []
+        for rental in active_rentals:
+            # Process car image URL
+            if rental.car.image_url:
+                image_url = f"{base_url.rstrip('/')}/{rental.car.image_url.lstrip('/').replace('\\', '/')}"
+            else:
+                image_url = None
 
-        base_url = request.build_absolute_uri('/')[:-1]
-        # Serialize the data including car details
-        rentals_data = [
-            {
+            rentals_data.append({
                 "receipt": rental.receipt,
                 "car": {
-                    "car_id":rental.car.id,
+                    "car_id": rental.car.id,
                     "plate_number": rental.car.plate_number,
                     "model": rental.car.model,
                     "category": rental.car.category,
                     "year": rental.car.year,
-                    "transmission":rental.car.transmission,
-                    #"daily_rate": rental.car.dynamic_daily_rate,
+                    "transmission": rental.car.transmission,
                     "fuel_type": rental.car.fuel_type,
-                    "image_url": (base_url + rental.car.image_url).replace('\\', '/'),
+                    "image_url": image_url,  # Properly formatted URL
                 },
                 "rental_start": rental.rental_start,
                 "rental_end": rental.rental_end,
                 "total_cost": rental.total_cost,
                 "rental_id": rental.id
-            }
-            for rental in active_rentals
-        ]
+            })
 
         return Response({
             "success": True,
@@ -307,8 +305,10 @@ def active_rentals(request):
         }, status=200)
 
     except Exception as e:
-        return Response({"success": False, "message": f"Error retrieving active rentals: {str(e)}"}, status=500)
-
+        return Response({
+            "success": False,
+            "message": f"Error retrieving active rentals: {str(e)}"
+        }, status=500)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
