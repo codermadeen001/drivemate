@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rental Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: {{ theme.dark_gray }};
+            background-color: {{ theme.light_gray }};
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: {{ theme.white }};
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background-color: {{ theme.primary }};
+            color: {{ theme.white }};
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .details {
+            background-color: {{ theme.light_gray }};
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .details p {
+            margin: 10px 0;
+        }
+        .cta {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: {{ theme.secondary }};
+            color: {{ theme.white }};
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .footer {
+            background-color: {{ theme.primary_light }};
+            color: {{ theme.white }};
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Rental Confirmation</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hello {{ user.first_name }},</p>
+            
+            <p>Thank you for your rental reservation. Here are the details of your booking:</p>
+            
+            <div class="details">
+                <p><strong>Car:</strong> {{ car.year }} {{ car.model }}</p>
+                <p><strong>Rental Period:</strong> {{ rental.rental_start }} to {{ rental.rental_end}}</p>
+                <p><strong>Total Cost:</strong> Ksh {{ rental.total_cost }}</p>
+                <p><strong>Pickup Location:</strong> Kisumu Airport</p>
+                 <p><strong>Ticket:</strong> {{ rental.receipt }}</p>
+            </div>
+            
+            <a href="#" class="cta">View Reservation</a>
+            
+            <p>If you have any questions about this rental, please contact our customer support.</p>
+        </div>
+        
+        <div class="footer">
+            © 2025 Drive Mate Rental Company | All Rights Reserved
+        </div>
+    </div>
+</body>
+</html>
