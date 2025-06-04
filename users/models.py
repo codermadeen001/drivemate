@@ -27,7 +27,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     contact = models.CharField(max_length=15, unique=True, null=True, blank=True)
-    profile_picture = models.CharField(max_length=255, default='http://127.0.0.1:8000/media/dp.jpg', blank=True)
+    profile_picture = models.CharField(max_length=255, default='https://drivemate-1.onrender.com/media/dp.jpg', blank=True)
     balance = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True) 
     suspended = models.BooleanField(default=False)
     
