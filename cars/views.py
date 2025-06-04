@@ -109,17 +109,22 @@ def create_car(request):
 
 
 
-
-
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def get_all_cars(request):
     try:
         cars = Car.objects.all()
-        base_url = request.build_absolute_uri('/')[:-1]  # e.g., http://127.0.0.1:8000
-
+        base_url = "https://drivemate-1.onrender.com"  # Explicit base URL
+        
         data = []
         for car in cars:
+            # Process image URL
+            if car.image_url:
+                # Normalize path and join with base URL
+                image_url = f"{base_url.rstrip('/')}/{car.image_url.lstrip('/').replace('\\', '/')}"
+            else:
+                image_url = None
+
             data.append({
                 "id": car.id,
                 "plate_number": car.plate_number,
@@ -132,22 +137,15 @@ def get_all_cars(request):
                 "daily_rate": str(car.daily_rate),
                 "dynamic_daily_rate": str(car.dynamic_daily_rate) if car.dynamic_daily_rate else None,
                 "status": car.status,
-                "breakdown_risk":car.breakdown_risk,
-                "image_url": (base_url + car.image_url).replace('\\', '/'),
+                "breakdown_risk": car.breakdown_risk,
+                "image_url": image_url,
                 "created_at": car.created_at.strftime('%Y-%m-%d %H:%M:%S'),
             })
 
         return JsonResponse({"success": True, "data": data})
-        
     
     except Exception as e:
         return JsonResponse({"success": False, "message": f"Error fetching cars: {str(e)}"}, status=500)
-
-
-
-
-
-
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
