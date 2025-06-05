@@ -88,6 +88,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'car_rental.wsgi.application'
 
 # Database
+"""
 
 DATABASES = {
     'default': {
@@ -95,7 +96,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-'''
+
 # Database
 DATABASES = {
     'default': {
@@ -107,7 +108,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
+"""
 
 # Database
 DATABASES = {
@@ -123,7 +124,7 @@ DATABASES = {
         },
     }
 }
-'''
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
