@@ -107,7 +107,7 @@ def create_car(request):
 
 
 
-
+"""
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -178,7 +178,99 @@ def car_data(request):
 
     except Exception as e:
         return Response({"success": False, "message": f"Error fetching car: {str(e)}"}, status=500)
+"""
+
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_all_cars(request):
+    try:
+        cars = Car.objects.all()
+        base_url = "https://drivemate-1.onrender.com"  # Explicit base URL
+        
+        data = []
+        for car in cars:
+            if car.image_url:
+                # Normalize image URL by replacing backslashes and stripping leading slash
+                normalized_image_path = car.image_url.replace('\\', '/').lstrip('/')
+                image_url = f"{base_url}/{normalized_image_path}"
+            else:
+                image_url = None
+
+            data.append({
+                "id": car.id,
+                "plate_number": car.plate_number,
+                "model": car.model,
+                "transmission": car.transmission,
+                "year": car.year,
+                "category": car.category,
+                "fuelType": car.fuel_type,
+                "mileage": car.mileage,
+                "daily_rate": str(car.daily_rate),
+                "dynamic_daily_rate": str(car.dynamic_daily_rate) if car.dynamic_daily_rate else None,
+                "status": car.status,
+                "breakdown_risk": car.breakdown_risk,
+                "image_url": image_url,
+                "created_at": car.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            })
+
+        return JsonResponse({"success": True, "data": data})
     
+    except Exception as e:
+        return JsonResponse({"success": False, "message": f"Error fetching cars: {str(e)}"}, status=500)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def car_data(request):
+    try:
+        car_id = request.data.get('car_id')
+        if not car_id:
+            return Response({"success": False, "message": "car_id is required."}, status=400)
+
+        car = get_object_or_404(Car, id=car_id)
+        
+        base_url = "https://drivemate-1.onrender.com"  # Use same base URL explicitly here too
+        if car.image_url:
+            normalized_image_path = car.image_url.replace('\\', '/').lstrip('/')
+            image_url = f"{base_url}/{normalized_image_path}"
+        else:
+            image_url = None
+
+        car_info = {
+            "id": car.id,
+            "plate_number": car.plate_number,
+            "model": car.model,
+            "transmission": car.transmission,
+            "year": car.year,
+            "category": car.category,
+            "fuelType": car.fuel_type,
+            "mileage": car.mileage,
+            "daily_rate": str(car.daily_rate),
+            "dynamic_daily_rate": str(car.dynamic_daily_rate) if car.dynamic_daily_rate else None,
+            "status": car.status,
+            "image_url": image_url,
+            "created_at": car.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        }
+
+        return Response({"success": True, "data": car_info}, status=200)
+
+    except Exception as e:
+        return Response({"success": False, "message": f"Error fetching car: {str(e)}"}, status=500)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
