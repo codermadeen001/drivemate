@@ -313,6 +313,7 @@ def active_rentals(request):
             "message": f"Error retrieving active rentals: {str(e)}"
         }, status=500)
 """
+"""
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def active_rentals(request):
@@ -367,6 +368,54 @@ def active_rentals(request):
         }, status=500)
 
 
+
+"""
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def active_rentals(request):
+    try:
+        user = request.user
+
+        active_rentals = Rental.objects.filter(
+            user=user,
+            status='active',
+            rental_end__gte=timezone.now()
+        ).select_related('car').order_by('rental_start')
+
+        rentals_data = []
+        for rental in active_rentals:
+            image_url = rental.car.image_url if rental.car.image_url else None
+
+            rentals_data.append({
+                "receipt": rental.receipt,
+                "car": {
+                    "car_id": rental.car.id,
+                    "plate_number": rental.car.plate_number,
+                    "model": rental.car.model,
+                    "category": rental.car.category,
+                    "year": rental.car.year,
+                    "transmission": rental.car.transmission,
+                    "fuel_type": rental.car.fuel_type,
+                    "image_url": image_url,
+                },
+                "rental_start": rental.rental_start,
+                "rental_end": rental.rental_end,
+                "total_cost": rental.total_cost,
+                "rental_id": rental.id
+            })
+
+        return Response({
+            "success": True,
+            "message": "Active rentals retrieved successfully",
+            "rentals": rentals_data
+        }, status=200)
+
+    except Exception as e:
+        return Response({
+            "success": False,
+            "message": f"Error retrieving active rentals: {str(e)}"
+        }, status=500)
 
 
 

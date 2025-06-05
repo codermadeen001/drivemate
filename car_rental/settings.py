@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import cloudinary
 
 
 #import dj_database_url
@@ -33,6 +34,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',  
+
+     'cloudinary',
+    'cloudinary_storage',
     
     'django.contrib.sites',
     'users',
@@ -84,15 +88,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'car_rental.wsgi.application'
 
 # Database
-'''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
+'''
 # Database
 DATABASES = {
     'default': {
@@ -104,7 +107,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-'''
+
 
 # Database
 DATABASES = {
@@ -120,7 +123,7 @@ DATABASES = {
         },
     }
 }
-
+'''
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -200,3 +203,41 @@ SIMPLE_JWT = {
 CRON_CLASSES = [
     "cars.cron.UpdateCarMetricsJob",
 ]
+
+
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': "dadcnkqbg", 
+    'API_KEY': "769447669581899", 
+    'API_SECRET': 'SMXcoOapJt4KElCoVzbCJ_SzIqM',
+}
+# Add this for raw cloudinary usage
+cloudinary.config(
+    cloud_name="dadcnkqbg",
+    api_key="769447669581899",
+    api_secret="SMXcoOapJt4KElCoVzbCJ_SzIqM"
+)
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'your_app_name': {  # Replace with your actual app name
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}

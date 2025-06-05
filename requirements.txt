@@ -11,3 +11,10 @@ gunicorn
 whitenoise
 dj-database-url
 python-decouple
+
+django-cloudinary-storage
+
+
+
+
+
