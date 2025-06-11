@@ -548,7 +548,10 @@ def admin_stats(request):
     total_vehicles = Car.objects.count()
     #total_bookings = Rental.objects.exclude(status='cancelled').count()
     # Exclude both 'cancelled' and 'completed' for total bookings
-    total_bookings = Rental.objects.filter(user=user).exclude(status__in=['cancelled', 'completed']).count()
+    #total_bookings = Rental.objects.filter(user=user).exclude(status__in=['cancelled', 'completed']).count()
+
+    total_bookings = Rental.objects.exclude(status__in=['cancelled', 'completed']).count()
+
 
 
 
