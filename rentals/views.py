@@ -260,7 +260,7 @@ def stats(request):
             "success": True,
             "message": "User statistics retrieved successfully",
             "data": {
-                "active_rentals": total_bookings,
+                "active_rentals":active_rentals,
                 "total_amount_spent": total_amount_spent,
                 "membership_status": membership_status,
                 'total_bookings':total_bookings,
