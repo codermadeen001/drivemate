@@ -230,8 +230,19 @@ def stats(request):
         active_rentals = Rental.objects.filter(user=user, status__in=['ongoing','active'])
 
         # Count total bookings and total amount spent where status is not canceled
-        total_bookings = active_rentals.exclude(status='cancelled').count()
-        total_amount_spent = active_rentals.exclude(status='cancelled').aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+        #total_bookings =Rental.objects.filter(user=user).exclude(status='cancelled').count()# active_rentals.exclude(status='cancelled').count()
+
+        #total_amount_spent = active_rentals.exclude(status='cancelled').aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+
+
+         #2. Get all rentals excluding cancelled
+        non_cancelled_rentals = Rental.objects.filter(user=user).exclude(status='cancelled')
+
+        # 3. Total bookings
+        total_bookings = non_cancelled_rentals.count()
+
+        # 4. Total amount spent
+        total_amount_spent = non_cancelled_rentals.aggregate(Sum('total_cost'))['total_cost__sum'] or 0
 
         # Determine the membership status based on total bookings
         if total_bookings == 0:
@@ -535,7 +546,10 @@ def admin_stats(request):
     #admin_balance = CustomUser.objects.get(role='admin').balance#aggregate(balance=Sum('balance'))['balance'] or 0
     admin_balance = CustomUser.objects.get(role='admin').balance 
     total_vehicles = Car.objects.count()
-    total_bookings = Rental.objects.exclude(status='cancelled').count()
+    #total_bookings = Rental.objects.exclude(status='cancelled').count()
+    # Exclude both 'cancelled' and 'completed' for total bookings
+    total_bookings = Rental.objects.filter(user=user).exclude(status__in=['cancelled', 'completed']).count()
+
 
 
     today = timezone.now().date()

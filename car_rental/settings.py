@@ -23,7 +23,6 @@ ALLOWED_HOSTS = [
 """
 ALLOWED_HOSTS = ['*']
 
-
 # --- CORS Settings ---
 INSTALLED_APPS = [
     'django.contrib.admin',
